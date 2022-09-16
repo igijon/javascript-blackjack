@@ -10,6 +10,14 @@ let deck = [];
 const tipos      = ['C','D','H','S'];
 const especiales = ['A','J','Q','K'];
 
+let puntosJugador = 0,
+    puntosComputadora = 0;
+
+//Referencias del HTML
+//Si voy a usar el elemento más de una vez, lo meto en una variable para reducir el número de 
+//llamadas a querySelector
+const btnPedir = document.querySelector('#btnPedir'); 
+const smalls = document.querySelectorAll('small');
 
 //Crea una baraja
 const crearDeck = () => {
@@ -62,3 +70,12 @@ const valorCarta = ( carta ) => {
 }
 
 
+//Eventos
+//Cuando mandamos una función como argumento, estamos haciendo un callback
+//Cuando escuche un click se disparará la función indicada
+btnPedir.addEventListener('click', () => {
+    const carta = pedirCarta();
+    puntosJugador += valorCarta(carta);
+    smalls[0].innerText = puntosJugador;
+    
+});
