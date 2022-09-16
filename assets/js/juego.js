@@ -16,7 +16,9 @@ let puntosJugador = 0,
 //Referencias del HTML
 //Si voy a usar el elemento más de una vez, lo meto en una variable para reducir el número de 
 //llamadas a querySelector
-const btnPedir = document.querySelector('#btnPedir'); 
+const btnPedir = document.querySelector('#btnPedir');
+const divCartasJugador = document.querySelector('#jugador-cartas');
+
 const smalls = document.querySelectorAll('small');
 
 //Crea una baraja
@@ -78,4 +80,17 @@ btnPedir.addEventListener('click', () => {
     puntosJugador += valorCarta(carta);
     smalls[0].innerText = puntosJugador;
     
+    const imgCarta = document.createElement('img');
+    imgCarta.src = `assets/cartas/${carta}.png`;
+    imgCarta.classList.add('carta');
+    divCartasJugador.append(imgCarta);
+
+    if( puntosJugador > 21) {
+        console.warn('Lo siento mucho, perdiste');
+        btnPedir.disabled = true;
+    } else if(puntosJugador === 21){
+        console.warn('Ganaste!')
+        btnPedir.disabled = true;
+
+    }
 });
