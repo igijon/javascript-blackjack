@@ -42,4 +42,23 @@ const pedirCarta = () => {
     const carta = deck.pop();
     return carta;
 }
-pedirCarta();
+
+const valorCarta = ( carta ) => {
+    //Extraer el número que será el valor de la carta en el caso de las numéricas
+    const valor = carta.substring(0, carta.length-1);
+
+    // let puntos = 0;
+    // if( isNaN(valor) ) {
+    //     puntos = ( valor === 'A' ) ? 11 : 10;
+    // } else {
+    //     puntos = valor*1; //Esto lo convierte en numérico
+    // }
+    // return puntos;
+    
+    //Esto es equivalente a lo de arriba
+    return isNaN(valor) ? 
+        ((valor === 'A') ? 11: 10): valor*1; 
+    
+}
+
+
