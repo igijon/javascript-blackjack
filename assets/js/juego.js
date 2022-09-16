@@ -17,7 +17,9 @@ let puntosJugador = 0,
 //Si voy a usar el elemento más de una vez, lo meto en una variable para reducir el número de 
 //llamadas a querySelector
 const btnPedir = document.querySelector('#btnPedir');
+const btnDetener = document.querySelector('#btnDetener');
 const divCartasJugador = document.querySelector('#jugador-cartas');
+const divCartasComputadora = document.querySelector('#computadora-cartas');
 
 const smalls = document.querySelectorAll('small');
 
@@ -71,6 +73,25 @@ const valorCarta = ( carta ) => {
     
 }
 
+//Turno de la computadora
+//Se va a disparar cuando el jugador pierde o cuando el jugador le da a detener
+//Intentará llegar a los puntos del jugador o a 21
+const turnoComputadora = (puntosMinimos) => {
+    //Siempre necesito una carta al menos.
+    do {
+        const carta = pedirCarta();
+        puntosComputadora += valorCarta(carta);
+        smalls[1].innerText = puntosComputadora;
+        
+        const imgCarta = document.createElement('img');
+        imgCarta.src = `assets/cartas/${carta}.png`;
+        imgCarta.classList.add('carta');
+        divCartasComputadora.append(imgCarta);
+        if(puntosMinimos > 21) {
+            break;
+        }
+    }while( (puntosComputadora < puntosMinimos) && (puntosMinimos <= 21));
+}
 
 //Eventos
 //Cuando mandamos una función como argumento, estamos haciendo un callback
@@ -88,9 +109,17 @@ btnPedir.addEventListener('click', () => {
     if( puntosJugador > 21) {
         console.warn('Lo siento mucho, perdiste');
         btnPedir.disabled = true;
+        btnDetener.disabled = true;
+        turnoComputadora(puntosJugador);
     } else if(puntosJugador === 21){
-        console.warn('Ganaste!')
+        console.warn('Ganaste!');
         btnPedir.disabled = true;
 
     }
 });
+
+btnDetener.addEventListener('click', () => {
+    btnPedir.disabled = true;
+    btnDetener.disabled = true;
+    turnoComputadora(puntosJugador);
+})
