@@ -10,6 +10,8 @@ let deck = [];
 const tipos      = ['C','D','H','S'];
 const especiales = ['A','J','Q','K'];
 
+
+//Crea una baraja
 const crearDeck = () => {
     for(let i = 2; i<=10; i++) {
         for( let tipo of tipos ) {
@@ -21,13 +23,23 @@ const crearDeck = () => {
             deck.push(especial+tipo);
         }
     }
+
+
+    //Vamos a utilizar una librería para barajar las cartas. Ofrece muchas funciones de 
+    //JS que debería tener por defecto pero algunas no...  como el shuffle... que recibe un array 
+    //y lo devuelve de forma aleatoria.
     deck = _.shuffle(deck);
     return deck;
 }
 
 
-//Vamos a utilizar una librería para barajar las cartas. Ofrece muchas funciones de 
-//JS que debería tener por defecto pero algunas no...  como el shuffle... que recibe un array 
-//y lo devuelve de forma aleatoria.
-
 crearDeck();
+
+const pedirCarta = () => {
+    if (deck.length === 0) {
+        throw 'No hay cartas en el deck';
+    }
+    const carta = deck.pop();
+    return carta;
+}
+pedirCarta();
