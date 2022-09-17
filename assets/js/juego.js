@@ -1,6 +1,6 @@
 //Esto se conoce como patrón módulo
 //Ya no podremos invocar funciones ni acceder por ejemplo al deck
-(() => {
+const miModulo = (() => {
     'use strict' //Le decimos a JS que evalúe nuestro código de forma estricta
 
     /**tenemos que alcanzar 21 puntos */
@@ -26,9 +26,15 @@
 
     const inicializarJuego = ( numeroJugadores = 2 ) => {
         deck = crearDeck();
+        puntosJugadores = [];
         for ( let i = 0; i < numeroJugadores; i++ ) {
             puntosJugadores.push(0);
         }
+
+        puntosHTML.forEach(element => element.innerText = 0);
+        divCartasJugador.forEach(element => element.innerHTML = '');
+        btnPedir.disabled = false;
+        btnDetener.disabled = false;
     }
 
     //Crea una baraja
@@ -85,22 +91,8 @@
         divCartasJugador[turno].append(imgCarta);
     }
 
-    //Turno de la computadora
-    //Se va a disparar cuando el jugador pierde o cuando el jugador le da a detener
-    //Intentará llegar a los puntos del jugador o a 21
-    const turnoComputadora = (puntosMinimos) => {
-        let puntosComputadora = 0;
-        //Siempre necesito una carta al menos.
-        do {
-            const carta = pedirCarta();
-            const turno = puntosJugadores.length-1;
-            puntosComputadora = acumularPuntos(carta, turno);
-            crearCarta(carta, turno);
-            if(puntosMinimos > 21) {
-                break;
-            }
-        }while( (puntosComputadora < puntosMinimos) && (puntosMinimos <= 21));
-
+    const determinarGanador = () => {
+        const [ puntosMinimos, puntosComputadora ] = puntosJugadores; //desestructuración
         //Le vamos a decir a JS que ejecute el alert cuando pinte las cartas
         setTimeout(() => {
             if( puntosComputadora === puntosMinimos) {
@@ -113,6 +105,22 @@
                 alert('Computadora gana');
             }
         }, 20); //Vamos a pedir 10ms antes de ejecutar el alert
+    }
+
+    //Turno de la computadora
+    //Se va a disparar cuando el jugador pierde o cuando el jugador le da a detener
+    //Intentará llegar a los puntos del jugador o a 21
+    const turnoComputadora = (puntosMinimos) => {
+        let puntosComputadora = 0;
+        //Siempre necesito una carta al menos.
+        do {
+            const carta = pedirCarta();
+            const turno = puntosJugadores.length-1;
+            puntosComputadora = acumularPuntos(carta, turno);
+            crearCarta(carta, turno);
+            
+        }while( (puntosComputadora < puntosMinimos) && (puntosMinimos <= 21));
+        determinarGanador();
         
     }
 
@@ -134,6 +142,8 @@
             console.warn('Ganaste!');
             alert('El jugador ganó');
             btnPedir.disabled = true;
+            btnDetener.disabled = true;
+            turnoComputadora(puntosJugador);
 
         }
     });
@@ -141,13 +151,17 @@
     btnDetener.addEventListener('click', () => {
         btnPedir.disabled = true;
         btnDetener.disabled = true;
-        turnoComputadora(puntosJugador);
+        turnoComputadora(puntosJugadores[0]);
     });
 
     btnNuevo.addEventListener('click', () => {
-        console.clear();
         inicializarJuego();
     });
+
+    //Lo que retornemos va a ser lo único público de mi módulo
+    return {
+        nuevoJuego: inicializarJuego
+    };
 
 })(); //Función anónima autoinvocada que se genera un scope sin
 //referencia por nombre y no se podrá llamar
